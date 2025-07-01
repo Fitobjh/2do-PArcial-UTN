@@ -1,0 +1,10 @@
+COLOR_CASILLA_AGUA = (0, 0, 0)               #NEGRO
+COLOR_CASILLA_BARCOS = (0, 255, 0)           #VERDE
+COLOR_TEXTO_BLANCO = (255, 255, 255)         #BLANCO
+COLOR_BOTON = (50, 000, 200)                 #AZUL MARINO
+COLOR_BOTON_SECUNDARIO = (0, 255, 0)         #VERDE     
+COLOR_FONDO = (10, 10, 40)
+MARGEN = 3
+
+COLOR_ACIERTO = (255, 0, 0)      # Rojo
+COLOR_FALLO = (100, 100, 100)    # Gris oscuro
