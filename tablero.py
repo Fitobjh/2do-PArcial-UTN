@@ -83,7 +83,7 @@ def barco_hundido(tablero:list, fila_inicial:int, columna_inicial:int)->list:
         fila_actual = casilla_actual[0]
         columna_actual = casilla_actual[1]
         
-        # Verificar si ya visitamos esta casilla
+        #Verificar si ya visitamos esta casilla
         ya_visitada = False
         for casilla in casillas_visitadas:
             if casilla[0] == fila_actual and casilla[1] == columna_actual:
@@ -91,10 +91,10 @@ def barco_hundido(tablero:list, fila_inicial:int, columna_inicial:int)->list:
                 break
             
         # Si no fue visitada y es parte tocada del barco (2)
-        if not ya_visitada and tablero[fila_actual][columna_actual] == 2:
+        if ya_visitada == False and tablero[fila_actual][columna_actual] == 2:
             casillas_visitadas.append((fila_actual, columna_actual))
-            tamaño_barco = tamaño_barco + 1
-            
+            tamaño_barco += 1 
+
             # Chequear casillas vecinas (derecha, abajo, izquierda, arriba)
             for i in range(len(direcciones)):
                 fila_vecina = fila_actual + direcciones[i][0]

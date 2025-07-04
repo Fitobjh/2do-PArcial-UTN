@@ -30,7 +30,7 @@ def dibujar_matriz(pantalla:pygame.Surface, matriz:list, inicio_x:int, inicio_y:
             
             valor = matriz[i][j]
             
-            # Por defecto: agua
+            #Por defecto: agua
             color = COLOR_CASILLA_AGUA
             
             if valor == 1 and not ocultar:
@@ -100,21 +100,22 @@ def menu_nivel(pantalla:pygame.Surface, fuente:pygame.font.Font, ancho_ventana:i
                 resultado = None
                 ejecutar = False
             if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
-                for nivel, rect in botones.items():
-                    if rect.collidepoint(evento.pos):
+                for nivel in botones:
+                    if botones[nivel].collidepoint(evento.pos):
                         if nivel == "volver":
                             resultado = None
                         else:
                             resultado = nivel
                         ejecutar = False
                         break
-                if not ejecutar:
+                if ejecutar == False:
                     break
         
         texto_titulo = fuente.render("Seleccione dificultad", True, COLOR_TEXTO_BLANCO)
         pantalla.blit(texto_titulo, (ancho_ventana//2 - texto_titulo.get_width()//2, 50))
         
-        for nivel, rect in botones.items():
+        for nivel in botones:
+            rect = botones[nivel]
             if nivel == "volver":
                 texto_btn = "Volver"
             else:
@@ -142,8 +143,8 @@ def mostrar_puntajes(pantalla:pygame.Surface, fuente:pygame.font.Font, ancho_ven
     
     puntajes = []
     
-    if os.path.exists("puntajes.txt"):
-        archivo = open("puntajes.txt", "r", encoding="utf-8")
+    if os.path.exists("2do Parcial/puntajes.txt"):
+        archivo = open("2do Parcial/puntajes.txt", "r", encoding="utf-8")
         for linea in archivo:
             if ',' in linea:
                 partes = linea.strip().split(",", 1)
@@ -228,7 +229,7 @@ def dibujar_boton_reiniciar(pantalla, fuente, mouse_pos, centro_x: int, abajo_y:
     boton_ancho = 140
     boton_alto = 40
     x = centro_x - boton_ancho // 2
-    y = abajo_y + 20  # 20px debajo del tablero
+    y = abajo_y + 20  #debajo del tablero
     
     boton_rect = pygame.Rect(x, y, boton_ancho, boton_alto)
     if boton_rect.collidepoint(mouse_pos):
@@ -264,10 +265,13 @@ def pedir_nick(pantalla:pygame.Surface, fuente_general:pygame.font.Font, sonido_
     activo = True
     clock = pygame.time.Clock()
     
-    ancho_ventana, alto_ventana = pantalla.get_size()
+    tamaño_ventana = pantalla.get_size()
+    ancho_ventana = tamaño_ventana[0]
+    alto_ventana = tamaño_ventana[1]
     
-    tamaño_fuente = max(18, alto_ventana // 20)  # tamaño dinámico mínimo 18
-    fuente = pygame.font.SysFont(None, tamaño_fuente)
+    
+    tamaño_fuente = alto_ventana // 20 
+    fuente = pygame.font.SysFont(None, tamaño_fuente)#fuente x defecto none
     
     resultado = "SinNombre"
     
@@ -318,6 +322,6 @@ def guardar_puntaje(nick: str, puntaje: int):
     
     No devuelve nada. Agrega una línea al archivo con el formato "nick,puntaje".
     """
-    with open("puntajes.txt", "a", encoding="utf-8") as f:
+    with open("2do Parcial/puntajes.txt", "a", encoding="utf-8") as f:
         f.write(f"{nick},{puntaje}\n")
 

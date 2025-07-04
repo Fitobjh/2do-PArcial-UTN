@@ -1,4 +1,3 @@
-# main.py
 import pygame
 import pygame.mixer as mixer
 from constantes import *
@@ -9,58 +8,58 @@ from interfaz import *
 def jugar_battleship(nivel:str, sonido_activado:bool):
     """
     Inicia y ejecuta el juego Battleship (Hundir la Flota) con la dificultad seleccionada.
-
+    
     Parámetros:
     - nivel (str): Nivel de dificultad ("facil", "medio", "dificil").
     - sonido_activado (bool): Indica si el sonido está activado para reproducir música y efectos.
-
+    
     No devuelve nada. Ejecuta el ciclo principal del juego hasta que se terminen los barcos o se cierre la ventana.
     """
-
+    
     pygame.init()
     mixer.init()
-
+    
     if sonido_activado == True:
         mixer.music.load('2do Parcial/Multimedia/Vanished.mp3')
         mixer.music.set_volume(0.4)
         mixer.music.play(-1)
-
+        
     disparo_acertado_sonido = mixer.Sound("2do Parcial/Multimedia/Explosion.mp3")
     disparo_errado_sonido = mixer.Sound("2do Parcial/Multimedia/errado.mp3")
-
+    
     tamaño = obtener_tamaño(nivel)
     mult = obtener_multiplicador(nivel)
     tam_casilla = obtener_tamaño_casilla(nivel)
-
+    
     enemigo = crear_matriz(tamaño)
     colocar_barcos(enemigo, mult)
-
+    
     ancho_matriz = tamaño * tam_casilla + (tamaño - 1) * MARGEN
     alto_matriz = tamaño * tam_casilla + (tamaño - 1) * MARGEN
-
+    
     margen_superior = 60
     ancho_ventana = ancho_matriz + 100
     alto_ventana = alto_matriz + margen_superior + 40
-
+    
     pantalla = pygame.display.set_mode((ancho_ventana, alto_ventana))
     pygame.display.set_caption("Battleship")
-
+    
     fondo = pygame.image.load('2do Parcial/Multimedia/mar.jpg')
     fondo_ajustado = pygame.transform.scale(fondo, (ancho_ventana, alto_ventana))
-
+    
     mixer.music.load('2do Parcial/Multimedia/Vanished.mp3')
     mixer.music.set_volume(0.4)
     mixer.music.play()
-
+    
     fuente = pygame.font.SysFont(None, 28)
     inicio_x = (ancho_ventana - ancho_matriz) // 2
     inicio_y = (alto_ventana - alto_matriz) // 2
-
+    
     nick = pedir_nick(pantalla, fuente, sonido_activado)
-
+    
     corriendo = True
     puntaje = 0
-
+    
     while corriendo:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -76,7 +75,7 @@ def jugar_battleship(nivel:str, sonido_activado:bool):
                             mouse_x, mouse_y = evento.pos
                             col = (mouse_x - inicio_x) // (tam_casilla + MARGEN)
                             fila = (mouse_y - inicio_y) // (tam_casilla + MARGEN)
-
+                            
                             if fila >= 0:
                                 if fila < tamaño:
                                     if col >= 0:
@@ -92,29 +91,29 @@ def jugar_battleship(nivel:str, sonido_activado:bool):
                                                     enemigo[fila][col] = 3
                                                     puntaje = calcular_puntaje(puntaje, False, False, 0)
                                                     disparo_errado_sonido.play()
-
+                                                    
         pantalla.blit(fondo_ajustado, (0, 0))
         inicio_x = (ancho_ventana - ancho_matriz) // 2
         inicio_y = (alto_ventana - alto_matriz) // 2
         centro_x = ancho_ventana // 2
         abajo_y = inicio_y + alto_matriz
-
+        
         dibujar_matriz(pantalla, enemigo, inicio_x, inicio_y, True, tam_casilla)
         mouse_pos = pygame.mouse.get_pos()
         boton_reiniciar = dibujar_boton_reiniciar(pantalla, fuente, mouse_pos, centro_x, abajo_y)
-
+        
         texto_puntaje = fuente.render("Puntaje: {:04}".format(puntaje), True, COLOR_TEXTO_BLANCO)
         pantalla.blit(texto_puntaje, (20, 20))
-
+        
         pygame.display.flip()
-
+        
         # Chequear si quedan barcos sin tocar (valor 1)
         quedan_barcos = False
         for fila_matriz in enemigo:
             if 1 in fila_matriz:
                 quedan_barcos = True
                 break
-
+            
         if quedan_barcos == False:
             guardar_puntaje(nick, puntaje)
             corriendo = False
@@ -154,7 +153,7 @@ def main():
         "nivel": pygame.Rect(ancho_ventana//2 - 150, alto_ventana//2 - 90, 300, 50),
         "jugar": pygame.Rect(ancho_ventana//2 - 150, alto_ventana//2 - 20, 300, 50),
         "puntajes": pygame.Rect(ancho_ventana//2 - 150, alto_ventana//2 + 50, 300, 50),
-        "sonido": pygame.Rect(ancho_ventana//2 - 150, alto_ventana//2 + 120, 140, 50),  # Botón sonido
+        "sonido": pygame.Rect(ancho_ventana//2 - 150, alto_ventana//2 + 120, 140, 50),  # Botón sonido misma altura y quy salir
         "salir": pygame.Rect(ancho_ventana//2 + 10, alto_ventana//2 + 120, 140, 50),
     }
     
@@ -184,7 +183,11 @@ def main():
                     mostrar_puntajes(pantalla, fuente, ancho_ventana, alto_ventana)
                 elif botones_menu["sonido"].collidepoint(evento.pos):
                     # Cambiar estado sonido
-                    sonido_activado = not sonido_activado
+                    if sonido_activado == True:
+                        sonido_activado = False
+                    else:
+                        sonido_activado = True
+                        
                     if sonido_activado:
                         mixer.music.unpause()
                     else:
